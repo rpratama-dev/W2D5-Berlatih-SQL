@@ -1,0 +1,207 @@
++------------------------------------------------+
+| Soal 1 Membuat Database						 |
++------------------------------------------------+
+
+CREATE DATABASE myshop; #membuat database myshop
+SHOW DATABASES; #Mengecek daftar database 
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| myshop             |
+| mysql              |
+| performance_schema |
+| phpmyadmin         | 
++--------------------+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
++------------------------------------------------+
+| Soal 2 Membuat Table di Dalam Database		 |
++------------------------------------------------+
+
+USE myshop; #untuk menggunakan database
+
+1. Buat Table users
+
+CREATE TABLE users (
+    -> id INT(6) AUTO_INCREMENT PRIMARY KEY,
+    -> name VARCHAR(255),
+    -> email VARCHAR(255),
+    -> password VARCHAR(255));
+
+DESCRIBE users; #Menampilkan structure table
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| id       | int(6)       | NO   | PRI | NULL    | auto_increment |
+| name     | varchar(255) | YES  |     | NULL    |                |
+| email    | varchar(255) | YES  |     | NULL    |                |
+| password | varchar(255) | YES  |     | NULL    |                |
++----------+--------------+------+-----+---------+----------------+
+
+2. Membuat Table categories
+
+CREATE TABLE categories (
+    -> id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    -> name VARCHAR(255));
+
+DESCRIBE categories; #Menampilkan structure table
++-------+--------------+------+-----+---------+----------------+
+| Field | Type         | Null | Key | Default | Extra          |
++-------+--------------+------+-----+---------+----------------+
+| id    | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(255) | YES  |     | NULL    |                |
++-------+--------------+------+-----+---------+----------------+
+
+3. Membuat Table items
+
+CREATE TABLE items (
+    -> id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    -> name VARCHAR(255),
+    -> description VARCHAR(255),
+    -> price INTEGER,
+    -> stock INTEGER,
+    -> category_id INTEGER,
+    -> FOREIGN KEY (category_id) REFERENCES categories(id));
+	
+DESCRIBE items;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name        | varchar(255) | YES  |     | NULL    |                |
+| description | varchar(255) | YES  |     | NULL    |                |
+| price       | int(11)      | YES  |     | NULL    |                |
+| stock       | int(11)      | YES  |     | NULL    |                |
+| category_id | int(11)      | YES  | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
++--------------------------------------------------------------------+
+| Soal 3 Memasukkan Data pada Table									 |
+---------------------------------------------------------------------+
+
+1. Insert Data Users
+
+INSERT INTO users
+    -> (name, email, password)
+    -> VALUES
+    -> ('John Doe', 'john@doe.com','john123'),
+    -> ('Jane Doe', 'jane@doe.com','jenita123');
+	
+SELECT * FROM users;
++----+----------+--------------+-----------+
+| id | name     | email        | password  |
++----+----------+--------------+-----------+
+|  1 | John Doe | john@doe.com | john123   |
+|  2 | Jane Doe | jane@doe.com | jenita123 |
++----+----------+--------------+-----------+
+
+2. Insert Data Categories
+
+INSERT INTO categories
+    -> (name)
+    -> VALUES
+    -> ('gadget'),
+    -> ('cloth'),
+    -> ('men'),
+    -> ('women'),
+    -> ('branded');
+
+SELECT * FROM categories;
++----+---------+
+| id | name    |
++----+---------+
+|  1 | gadget  |
+|  2 | cloth   |
+|  3 | men     |
+|  4 | women   |
+|  5 | branded |
++----+---------+
+
+3. Insert Data Items
+
+INSERT INTO items
+    -> (name, description, price, stock, category_id)
+    -> VALUES
+    -> ('Sumsang b50','hape keren dari merk sumsang',4000000,100,1),
+    -> ('uniklooh','baju keren dari brand ternama',500000,50,2),
+    -> ('IMHO Watch','jam tangan anak yang jujur banget',2000000,10,1);
+	
+SELECT * FROM items;
++----+-------------+-----------------------------------+---------+-------+-------------+
+| id | name        | description                       | price   | stock | category_id |
++----+-------------+-----------------------------------+---------+-------+-------------+
+|  1 | Sumsang b50 | hape keren dari merk sumsang      | 4000000 |   100 |           1 |
+|  2 | uniklooh    | baju keren dari brand ternama     |  500000 |    50 |           2 |
+|  3 | IMHO Watch  | jam tangan anak yang jujur banget | 2000000 |    10 |           1 |
++----+-------------+-----------------------------------+---------+-------+-------------+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
++--------------------------------------------------------------------------------------+
+| Soal 4 Mengambil Data dari Database												   |
++--------------------------------------------------------------------------------------+
+
+a. Mengambil data users (tanpa menampilkan field password)
+
+SELECT id, name, email FROM users;
++----+----------+--------------+
+| id | name     | email        |
++----+----------+--------------+
+|  1 | John Doe | john@doe.com |
+|  2 | Jane Doe | jane@doe.com |
++----+----------+--------------+
+
+b. Mengambil data items
+
+	[v] harga di atas 1,000,000
+	
+SELECT * FROM items WHERE price > 1000000;
++----+-------------+-----------------------------------+---------+-------+-------------+
+| id | name        | description                       | price   | stock | category_id |
++----+-------------+-----------------------------------+---------+-------+-------------+
+|  1 | Sumsang b50 | hape keren dari merk sumsang      | 4000000 |   100 |           1 |
+|  3 | IMHO Watch  | jam tangan anak yang jujur banget | 2000000 |    10 |           1 |
++----+-------------+-----------------------------------+---------+-------+-------------+
+
+	[v] items yang memiliki name (like) dengan kata kunci “sang”
+
+SELECT * FROM items WHERE name LIKE '%sang%';
++----+-------------+------------------------------+---------+-------+-------------+
+| id | name        | description                  | price   | stock | category_id |
++----+-------------+------------------------------+---------+-------+-------------+
+|  1 | Sumsang b50 | hape keren dari merk sumsang | 4000000 |   100 |           1 |
++----+-------------+------------------------------+---------+-------+-------------+
+
+c. Menampilkan data items join dengan kategori
+
+SELECT i.*, c.name as kategori FROM items i, categories c WHERE i.category_id = c.id;
++----+-------------+-----------------------------------+---------+-------+-------------+----------+
+| id | name        | description                       | price   | stock | category_id | kategori |
++----+-------------+-----------------------------------+---------+-------+-------------+----------+
+|  1 | Sumsang b50 | hape keren dari merk sumsang      | 4000000 |   100 |           1 | gadget   |
+|  2 | uniklooh    | baju keren dari brand ternama     |  500000 |    50 |           2 | cloth    |
+|  3 | IMHO Watch  | jam tangan anak yang jujur banget | 2000000 |    10 |           1 | gadget   |
++----+-------------+-----------------------------------+---------+-------+-------------+----------+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
++-------------------------------------------------------------------------------------------------+
+| Soal 5 Mengubah Data dari Database											  				  |
++-------------------------------------------------------------------------------------------------+
+
+Note : Ubahlah data pada table items untuk item dengan nama sumsang harganya menjadi 2500000
+
+UPDATE items SET price = 2500000 WHERE id = 1;
+
+SELECT * FROM items;
++----+-------------+-----------------------------------+---------+-------+-------------+
+| id | name        | description                       | price   | stock | category_id |
++----+-------------+-----------------------------------+---------+-------+-------------+
+|  1 | Sumsang b50 | hape keren dari merk sumsang      | 2500000 |   100 |           1 |
+|  2 | uniklooh    | baju keren dari brand ternama     |  500000 |    50 |           2 |
+|  3 | IMHO Watch  | jam tangan anak yang jujur banget | 2000000 |    10 |           1 |
++----+-------------+-----------------------------------+---------+-------+-------------+
+
+.:: SEKIAN & TERIMAKASIH ::.
+	#PastiAdaJalan
+	
